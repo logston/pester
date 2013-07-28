@@ -1,0 +1,5 @@
+# compiled code
+*.py[co]
+
+# databases
+.DS_Store

@@ -3,3 +3,7 @@
 
 # databases
 .DS_Store
+
+# images
+*.jpg
+*.png

@@ -4,6 +4,9 @@
 # databases
 .DS_Store
 
+# static data files
+*.json
+
 # images
 *.jpg
 *.png

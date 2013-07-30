@@ -35,10 +35,11 @@ class GoogleAPI():
         return simplejson.load(self._make_request(self._get_query_string()))
 
     def _get_query_string(self):
-        """Return URL safe query string"""
+        """Return query string wih google search query parameters"""
         query_args = {'key':self.key,
                       'cx':self.cx,
                       'searchType':'image',
+                      'imgSize':'medium',
                       'q':self.q,
                       'safe':self.safe}
 

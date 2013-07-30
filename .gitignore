@@ -7,3 +7,6 @@
 # images
 *.jpg
 *.png
+
+# private working dir
+priv/

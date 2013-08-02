@@ -11,5 +11,6 @@
 *.jpg
 *.png
 
-# private working dir
+# dirs
 priv/
+migrations/

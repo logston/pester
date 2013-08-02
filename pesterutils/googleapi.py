@@ -8,7 +8,7 @@ media resource URLs from the Bing Image Search API.
 import urllib, urllib2, base64
 import simplejson
 
-class GoogleAPI():
+class GoogleAPI(object):
     """Encapsulates Google Custom Search calls"""
 
     def __init__(self, key, cx):

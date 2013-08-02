@@ -1,7 +1,8 @@
+import re
+
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
-from django.core.exceptions import ValidationError
-import re
 
 # phone number regex
 pnum_pattern = re.compile(r'[0-9]{10}')
@@ -86,7 +87,8 @@ class Pestering(models.Model):
     notify_recipient_method = models.CharField(
         max_length=1,
         choices=NOTIFY_METHODS,
-        default=EMAIL)
+        default=TEXT)
+    title = models.CharField(max_length=140)
 
     def __unicode__(self):
         return ''.join((str(self.user.first_name),
@@ -103,17 +105,36 @@ class Image(models.Model):
     """Model describing """
     search_term = models.CharField(max_length=64)
     url = models.URLField(unique=True)
+    file_type = models.CharField(max_length=64)
+    height = models.PositiveSmallIntegerField()
+    width = models.PositiveSmallIntegerField()
 
     def __unicode__(self):
         return self.search_term+' ('+self.url+')'
 
-class SentPestering(models.Model):
-    """Model to record sent Pesterings"""
+class PesteringManagerRun(models.Model):
+    """Model to record cron jobs and their success"""
+    run_time = models.DateTimeField()
+    completed = models.NullBooleanField()
+
+    def __unicode__(self):
+        return self.runtime
+
+class PesteringAttempt(models.Model):
+    """Model to record attempted Pesterings"""
     pestering = models.ForeignKey(Pestering)
+    pestering_manager_run = models.ForeignKey(PesteringManagerRun)
     image = models.ForeignKey(Image)
-    send_time = models.DateTimeField()
+    attempt_time = models.DateTimeField()
     success = models.NullBooleanField()
-    notes = models.CharField(max_length=64)
 
     def __unicode__(self):
         return self.pestering+' sent at '+self.sent_time
+
+class PesteringException(models.Model):
+    """Model to record exceptions of Pesterings"""
+    pestering_attempt = models.ForeignKey(PesteringAttempt)
+    exception_traceback = models.TextField()
+
+    def __unicode__(self):
+        return 'Exception for Pestering Attempt '+str(self.pestering_attempt)

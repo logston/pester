@@ -5,12 +5,12 @@ This class defines the functionality for sending a Pester.
 """
 
 from datetime import datetime
-import urllib2
-import smtplib
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
+import smtplib
+import urllib2
 
-class SendPester():
+class SendPester(object):
     """Encapsulates sending a Pester"""
 
     def __init__(self):

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from pester.models import Carrier, User, Recipient, Pestering, Image, SentPestering, Pattern
+from pester.models import Carrier, User, Recipient, Pestering, Image, PesteringAttempt, Pattern
 
 class CarrierAdmin(admin.ModelAdmin):
     list_display = ['name', 'gateway']
@@ -22,11 +22,18 @@ class PesteringAdmin(admin.ModelAdmin):
 class ImageAdmin(admin.ModelAdmin):
     pass
 
-class SentPesteringAdmin(admin.ModelAdmin):
+class PesteringManagerRunAdmin(admin.ModelAdmin):
+    pass
+
+class PesteringAttemptAdmin(admin.ModelAdmin):
     def has_add_permission(self, request, obj=None):
         return False
     def has_delete_permission(self, request, obj=None):
         return False
+
+class PesteringException(admin.ModelAdmin):
+    pass
+
 
 admin.site.register(Carrier, CarrierAdmin)
 admin.site.register(User, UserAdmin)
@@ -34,4 +41,6 @@ admin.site.register(Recipient, RecipientAdmin)
 admin.site.register(Pattern, PatternAdmin)
 admin.site.register(Pestering)
 admin.site.register(Image)
-admin.site.register(SentPestering, SentPesteringAdmin)
+admin.site.register(PesteringManagerRun)
+admin.site.register(PesteringAttempt, PesteringAttemptAdmin)
+admin.site.register(PesteringException)

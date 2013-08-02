@@ -1,5 +1,12 @@
 #! /bin/bash
 
-alias python=/home/paul/.virtualenvs/dj/bin/python
+python=/home/paul/.virtualenvs/dj/bin/python
+manager=/home/paul/djprojs/mysite/pester/pestering_manager.py
 
-python
+if [ -f $python]; then
+	
+fi
+
+exec $python $manager
+
+exit 0

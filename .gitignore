@@ -11,6 +11,9 @@
 *.jpg
 *.png
 
+# temp files
+*.swp
+
 # dirs
 priv/
 migrations/

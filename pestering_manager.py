@@ -10,10 +10,28 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from datetime import datetime
 from random import randint
 
-from pester.models import Pestering, PesteringAttempt, PesteringManagerRun, Image
+from pester.models import *
 
 from pesterutils import bingapi
 from pesterutils import sendpester
+
+"""
+OUTLINE
+Start PesteringManagerRun
+    Find out active Pesterings
+        For each pestering
+            if pattern says its time to send new pester
+                Start pester attempt
+                Get number of unused imageurls
+                if number is 0
+                    get more
+                    go back to 'Get number of unused imageurls'
+                take first unused image url 
+                send pester
+                save pester attempt results
+    Save PesteringManagerRun
+"""
+
 
 DIR = '/home/paul/djprojs/mysite/pester/priv/'
 
@@ -26,7 +44,6 @@ with open(DIR + 'paul.mmsaddress') as fp:
 bobj = bingapi.BingAPI(bing_api_key)
 d = bobj.query('Fat Cats')['d']['results']
 url = d[randint(0, len(d)-1)]['MediaUrl']
-
 
 image_0 = Image.objects.all()[0]
 pestering_0 = Pestering.objects.all()[0]

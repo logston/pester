@@ -101,7 +101,7 @@ class Pestering(models.Model):
         return (self.start_time <= timezone.now() and 
                 timezone.now() <= self.end_time)
 
-class Image(models.Model):
+class ImageData(models.Model):
     """Model describing """
     search_term = models.CharField(max_length=64)
     url = models.URLField(unique=True)
@@ -114,7 +114,7 @@ class Image(models.Model):
 
 class PesteringManagerRun(models.Model):
     """Model to record cron jobs and their success"""
-    run_time = models.DateTimeField()
+    run_time = models.DateTimeField(auto_now_add=True)
     completed = models.NullBooleanField()
 
     def __unicode__(self):
@@ -124,8 +124,8 @@ class PesteringAttempt(models.Model):
     """Model to record attempted Pesterings"""
     pestering = models.ForeignKey(Pestering)
     pestering_manager_run = models.ForeignKey(PesteringManagerRun)
-    image = models.ForeignKey(Image)
-    attempt_time = models.DateTimeField()
+    image = models.ForeignKey(ImageData)
+    attempt_time = models.DateTimeField(auto_now_add=True)
     success = models.NullBooleanField()
 
     def __unicode__(self):

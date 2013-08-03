@@ -4,17 +4,21 @@ This script manages the collection and sending
 of all pesterings that are due to be sent.
 This script is called by a cronjob every minute.
 """
-import sys, os.path
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
+import sys, os
+PESTERDIR = os.path.dirname(os.path.abspath(__file__))
+PARENTDIR = os.path.dirname(PESTERDIR)
+sys.path.append(PESTERDIR)
+sys.path.append(PARENTDIR)
+os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
 
 from datetime import datetime
 from random import randint
 
 from pester.models import *
 
-from pesterutils import bingapi
-from pesterutils import sendpester
-
+from pester.pesterutils import bingapi
+from pester.pesterutils import sendpester
 """
 OUTLINE
 Start PesteringManagerRun
@@ -33,7 +37,7 @@ Start PesteringManagerRun
 """
 
 
-DIR = '/home/paul/djprojs/mysite/pester/priv/'
+DIR = os.path.join(PESTERDIR, 'priv/')
 
 with open(DIR + 'bingapi.key') as fp:
     bing_api_key = fp.read().strip()

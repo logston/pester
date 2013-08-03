@@ -1,5 +1,6 @@
 from django.contrib import admin
-from pester.models import Carrier, User, Recipient, Pestering, Image, PesteringAttempt, Pattern
+from pester.models import Carrier, User, Recipient, Pattern, Pestering, Image 
+from pester.models import PesteringManagerRun, PesteringAttempt, PesteringException
 
 class CarrierAdmin(admin.ModelAdmin):
     list_display = ['name', 'gateway']
@@ -31,7 +32,7 @@ class PesteringAttemptAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
-class PesteringException(admin.ModelAdmin):
+class PesteringExceptionAdmin(admin.ModelAdmin):
     pass
 
 
@@ -39,8 +40,8 @@ admin.site.register(Carrier, CarrierAdmin)
 admin.site.register(User, UserAdmin)
 admin.site.register(Recipient, RecipientAdmin)
 admin.site.register(Pattern, PatternAdmin)
-admin.site.register(Pestering)
-admin.site.register(Image)
-admin.site.register(PesteringManagerRun)
+admin.site.register(Pestering, PesteringAdmin)
+admin.site.register(Image, ImageAdmin)
+admin.site.register(PesteringManagerRun, PesteringManagerRunAdmin)
 admin.site.register(PesteringAttempt, PesteringAttemptAdmin)
-admin.site.register(PesteringException)
+admin.site.register(PesteringException, PesteringExceptionAdmin)

@@ -118,7 +118,7 @@ class PesteringManagerRun(models.Model):
     completed = models.NullBooleanField()
 
     def __unicode__(self):
-        return self.runtime
+        return str(self.run_time)
 
 class PesteringAttempt(models.Model):
     """Model to record attempted Pesterings"""
@@ -129,7 +129,7 @@ class PesteringAttempt(models.Model):
     success = models.NullBooleanField()
 
     def __unicode__(self):
-        return self.pestering+' sent at '+self.sent_time
+        return str(self.pestering)+' sent at '+str(self.attempt_time)
 
 class PesteringException(models.Model):
     """Model to record exceptions of Pesterings"""

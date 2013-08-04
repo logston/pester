@@ -12,7 +12,7 @@ sys.path.append(PESTERDIR)
 sys.path.append(PARENTDIR)
 os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
 
-from pester.pesterutils.pester_manager import PesteringManager
+from pester.pesterutils.pestering_manager import PesteringManager
 
 pestering_manager = PesteringManager()
 pestering_manager.run()

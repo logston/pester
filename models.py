@@ -57,7 +57,8 @@ class Pattern(models.Model):
     """Model describing a sending pattern for a Pestering"""
     name = models.CharField(max_length=32)
     description = models.CharField(max_length=256)
-    
+    code = models.CharField(max_length=32)
+
     def __unicode__(self):
         return self.name
 

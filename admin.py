@@ -1,6 +1,6 @@
 from django.contrib import admin
-from pester.models import Carrier, User, Recipient, Pattern, Pestering, Image 
-from pester.models import PesteringManagerRun, PesteringAttempt, PesteringException
+
+from pester.models import *
 
 class CarrierAdmin(admin.ModelAdmin):
     list_display = ['name', 'gateway']
@@ -20,20 +20,36 @@ class PatternAdmin(admin.ModelAdmin):
 class PesteringAdmin(admin.ModelAdmin):
     pass
 
-class ImageAdmin(admin.ModelAdmin):
+class ImageDataAdmin(admin.ModelAdmin):
     pass
 
 class PesteringManagerRunAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['run_time', 'completed']
+    ordering = ['-run_time']
+
+    def has_add_permission(self, request, obj=None):
+        return False
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 class PesteringAttemptAdmin(admin.ModelAdmin):
+    list_display = ['attempt_time',
+                    'success',
+                    'pestering',
+                    'image',
+                    'pestering_manager_run']
+    ordering = ['-attempt_time']
+    
     def has_add_permission(self, request, obj=None):
         return False
     def has_delete_permission(self, request, obj=None):
         return False
 
 class PesteringExceptionAdmin(admin.ModelAdmin):
-    pass
+    def has_add_permission(self, request, obj=None):
+        return False
+    def has_delelte_permission(self, request, obj=None):
+        return False
 
 
 admin.site.register(Carrier, CarrierAdmin)
@@ -41,7 +57,7 @@ admin.site.register(User, UserAdmin)
 admin.site.register(Recipient, RecipientAdmin)
 admin.site.register(Pattern, PatternAdmin)
 admin.site.register(Pestering, PesteringAdmin)
-admin.site.register(Image, ImageAdmin)
+admin.site.register(ImageData, ImageDataAdmin)
 admin.site.register(PesteringManagerRun, PesteringManagerRunAdmin)
 admin.site.register(PesteringAttempt, PesteringAttemptAdmin)
 admin.site.register(PesteringException, PesteringExceptionAdmin)

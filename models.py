@@ -95,11 +95,9 @@ class Pestering(models.Model):
                         ' -> ',
                         str(self.recipient.first_name),
                         ' | ',
+                        str(self.search_term),
+                        ' | ',
                         str(self.pattern)))
-    
-    def is_pestering(self):
-        return (self.start_time <= timezone.now() and 
-                timezone.now() <= self.end_time)
 
 class ImageData(models.Model):
     """Model describing """

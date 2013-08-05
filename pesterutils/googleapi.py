@@ -32,7 +32,8 @@ class GoogleAPI(object):
         self.q = q
         self.safe = safe
 
-        return simplejson.load(self._make_request(self._get_query_string()))
+        return self._parse_result(
+                simplejson.load(self._make_request(self._get_query_string())))
 
     def _get_query_string(self):
         """Return query string wih google search query parameters"""
@@ -51,3 +52,12 @@ class GoogleAPI(object):
         request = urllib2.Request(url)
         result = urllib2.urlopen(request)
         return result
+
+    def _parse_result(self, result_dict):
+        """Return a list of tuples [(url, file_type, width, height)]"""
+        result_list = result_dict['items']
+        return [(
+            result['link'],
+            result['mime'],
+            int(result['image']['width']),
+            int(result['image']['height'])) for result in result_list]

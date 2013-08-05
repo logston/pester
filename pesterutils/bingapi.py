@@ -20,7 +20,7 @@ class BingAPI(object):
         self.top = 50
         self.skip = 0
         self.frmt = 'JSON'
-        self.adult = 'Off'
+        self.adult = 'Off' # or Moderate, Strict
         self.market = 'en-US'
 
     def _quote(self, value):
@@ -40,7 +40,8 @@ class BingAPI(object):
         self.adult = self._quote(adult)
         self.market = self._quote(self.market)
 
-        return simplejson.load(self._make_request(self._get_query_string()))
+        return self._parse_result(
+                simplejson.load(self._make_request(self._get_query_string())))
 
     def _get_query_string(self):
         """Return URL safe query string"""
@@ -63,3 +64,12 @@ class BingAPI(object):
         request.add_header('Authorization', 'Basic %s' % auth_string)
         result = urllib2.urlopen(request)
         return result
+
+    def _parse_result(self, results_dict):
+        """return list of tuples [(url, file_type, width, height)]"""
+        results_list = results_dict['d']['results']
+        return [(
+            result['MediaUrl'],
+            result['ContentType'],
+            int(result['Width']),
+            int(result['Height'])) for result in results_list]

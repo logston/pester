@@ -9,6 +9,7 @@ from django.utils import timezone
 
 from pester.models import PesteringManagerRun, Pestering
 
+from pester.pesterutils.imagemanager import ImageManager
 from pester.pesterutils.pestering_pattern_checker import PesteringPatternChecker
 
 class PesteringManager(object):
@@ -28,8 +29,23 @@ class PesteringManager(object):
             if not ppc.is_due(pestering):
                 continue
             print 'Act on ' + str(pestering)
+            
+            image_manager = ImageManager(pestering)
+            print image_manager.get_image()
+
+
+
+            """
+            Start Pestering attempt here"""
+            
             # pull new image
-            """ if number of unused images is 0, go get more"""
+            
+            
+            """ 
+                 BUILD MODEL: APICALL(search_engine, search_term, offset, date_time, number of api calls left)
+                 put model in bing and google apis or make parent ImageManager
+
+            if number of unused images is 0, go get more"""
             # start pestering attempt
             """
             pestering_attempt = pestering_attempt_start(

@@ -90,6 +90,15 @@ class Pestering(models.Model):
         choices=NOTIFY_METHODS,
         default=TEXT)
     title = models.CharField(max_length=140)
+    OFF, MEDIUM, HIGH = 'O', 'M', 'H'
+    ADULT_LEVELS = (
+            (OFF, 'Off'),
+            (MEDIUM, 'Medium'),
+            (HIGH, 'High'))
+    adult_safety_level = models.CharField(
+            max_length=1,
+            choices=ADULT_LEVELS,
+            default=MEDIUM)
 
     def __unicode__(self):
         return ''.join((str(self.user.first_name),
@@ -105,8 +114,17 @@ class ImageData(models.Model):
     search_term = models.CharField(max_length=64)
     url = models.URLField(unique=True)
     file_type = models.CharField(max_length=64)
-    height = models.PositiveSmallIntegerField()
     width = models.PositiveSmallIntegerField()
+    height = models.PositiveSmallIntegerField()
+    OFF, MEDIUM, HIGH = 'O', 'M', 'H'
+    ADULT_LEVELS = (
+            (OFF, 'Off'),
+            (MEDIUM, 'Medium'),
+            (HIGH, 'High'))
+    adult_safety_level = models.CharField(
+            max_length=1,
+            choices=ADULT_LEVELS,
+            default=MEDIUM)
 
     def __unicode__(self):
         return self.search_term+' ('+self.url+')'
@@ -123,7 +141,7 @@ class PesteringAttempt(models.Model):
     """Model to record attempted Pesterings"""
     pestering = models.ForeignKey(Pestering)
     pestering_manager_run = models.ForeignKey(PesteringManagerRun)
-    image = models.ForeignKey(ImageData)
+    image = models.ForeignKey(ImageData, null=True, blank=True, default=None)
     attempt_time = models.DateTimeField(auto_now_add=True)
     success = models.NullBooleanField()
 

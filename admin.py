@@ -15,7 +15,7 @@ class RecipientAdmin(admin.ModelAdmin):
     ordering = ['last_name']
 
 class PatternAdmin(admin.ModelAdmin):
-    list_display = ['name', 'description']
+    list_display = ['name', 'description', 'code']
 
 class PesteringAdmin(admin.ModelAdmin):
     pass

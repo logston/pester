@@ -24,13 +24,15 @@ class GoogleAPI(object):
         self.safe = 'off' #or medium, high
         self.APIURL = 'https://www.googleapis.com/customsearch/v1'
 
-    def query(self, q, safe='off'):
+    def query(self, search_terms, offset=0, adult='M'):
         """Return Google Search results as dictionary"""
-        if not q:
+        if not search_terms:
             raise ValueError("No search terms given.")
-
-        self.q = q
-        self.safe = safe
+            
+        adult_levels = {'O':'off', 'M':'medium', 'H':'high'}
+        
+        self.q = search_terms
+        self.safe = adult_levels[adult]
 
         return self._parse_result(
                 simplejson.load(self._make_request(self._get_query_string())))

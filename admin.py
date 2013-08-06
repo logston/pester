@@ -2,6 +2,9 @@ from django.contrib import admin
 
 from pester.models import *
 
+class APIAdmin(admin.ModelAdmin):
+    list_display = ['name', 'key']
+
 class CarrierAdmin(admin.ModelAdmin):
     list_display = ['name', 'gateway']
     ordering = ['name']
@@ -21,7 +24,7 @@ class PesteringAdmin(admin.ModelAdmin):
     pass
 
 class ImageDataAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['search_term', 'url', 'adult_safety_level']
 
 class PesteringManagerRunAdmin(admin.ModelAdmin):
     list_display = ['run_time', 'completed']
@@ -51,7 +54,7 @@ class PesteringExceptionAdmin(admin.ModelAdmin):
     def has_delelte_permission(self, request, obj=None):
         return False
 
-
+admin.site.register(API, APIAdmin)
 admin.site.register(Carrier, CarrierAdmin)
 admin.site.register(User, UserAdmin)
 admin.site.register(Recipient, RecipientAdmin)

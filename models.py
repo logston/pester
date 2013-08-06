@@ -12,6 +12,16 @@ def validate_pnum(pnum):
     if not re.match(pnum_pattern, pnum):
         raise ValidationError(u'%s is not a valid phone number'%pnum)
 
+
+class API(models.Model):
+    """Model detialing the API params"""
+    name = models.CharField(max_length=32)
+    key = models.CharField(max_length=200)
+    params = models.TextField(blank=True)
+
+    def __unicode__(self):
+        return self.name
+
 class Carrier(models.Model):
     """Model connecting cellular SMS providers to email addresses"""
     name = models.CharField(max_length=32)

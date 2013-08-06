@@ -4,14 +4,17 @@
 This script defines a class that manages all pesterings due 
 at runtime.
 """
+import traceback
 
 from django.utils import timezone
 
-from pester.models import PesteringManagerRun, Pestering
+from pester.models import PesteringManagerRun, Pestering, PesteringAttempt
+from pester.models import PesteringException
+from pester.models import User, Recipient, Carrier
 
 from pester.pesterutils.imagemanager import ImageManager
 from pester.pesterutils.pestering_pattern_checker import PesteringPatternChecker
-
+from pester.pesterutils.sendpester import SendPester
 class PesteringManager(object):
     """Manages all Pesterings due at runtime."""
 
@@ -28,57 +31,66 @@ class PesteringManager(object):
         for pestering in pesterings:
             if not ppc.is_due(pestering):
                 continue
-            print 'Act on ' + str(pestering)
-            
-            image_manager = ImageManager(pestering)
-            print image_manager.get_image()
 
+            pestering_attempt = PesteringAttempt.objects.create(
+                    pestering=pestering,
+                    pestering_manager_run=self.pestering_manager_run)
 
+            pestering_attempt.success=False 
+            pestering_attempt.save()
 
-            """
-            Start Pestering attempt here"""
-            
-            # pull new image
-            
-            
-            """ 
-                 BUILD MODEL: APICALL(search_engine, search_term, offset, date_time, number of api calls left)
-                 put model in bing and google apis or make parent ImageManager
-
-            if number of unused images is 0, go get more"""
-            # start pestering attempt
-            """
-            pestering_attempt = pestering_attempt_start(
-                    pestering, 
-                    self.pestering_manager_run,
-                    image)
-        
             try:
-                # send image
-                "
-                "
-                pass
-                # end pestering attempt with success
-                #pestering_attempt_success(pestering_attempt)
-            except Exception as e:
+                image_manager = ImageManager(pestering)
+                image = image_manager.get_image()
+                pestering_attempt.image = image
+                pestering_attempt.save()
+                
+                # send pester
+                pester = SendPester()
+                for to in self._get_recipient_emails(pestering):
+                    pester.send_pester(
+                        to=str(to),
+                        url=image.url,
+                        frm=pestering.user.email,
+                        subject=pestering.title) 
+                pestering_attempt.success=True
+                pestering_attempt.save()
+            except:
                 PesteringException.objects.create(
                         pestering_attempt=pestering_attempt,
-                        exception_traceback=str(e))
-        """
+                        exception_traceback=traceback.format_exc())
+        
         # close up pestering manager run
         self.pestering_manager_run.completed=True
         self.pestering_manager_run.save()
 
-    def pestering_attempt_start(self, pestering, pestering_manager_run, image):
-        """Return pestering attempt object"""
-        pestering_attempt = PesteringAttempt(
-                pestering=pestering,
-                pestering_manager_run=pestering_manager_run,
-                image=image,
-                success=False)
-        pestering_attempt.save()      
-        return pestering_attempt
+    def _get_recipient_emails(self, pestering):
+        """Get email addresses for all recipients of this pestering"""
+        recip_emails = []
+        if pestering.notify_user_method == 'E':
+            recip_emails.append(pestering.user.email)
+        if pestering.notify_user_method == 'T':
+            recip_emails.append(
+                    self._build_email_from_phone_number(
+                        pestering.user))
+        if pestering.notify_user_method == 'B':
+            recip_emails.append(pestering.user.email)
+            recip_emails.append(
+                    self._build_email_from_phone_number(
+                        pesering.user))
+        if pestering.notify_recipient_method == 'E':  
+            recip_emails.append(pestering.recipient.email)
+        if pestering.notify_recipient_method == 'T':
+            recip_emails.append(
+                    self._build_email_from_phone_number(
+                        pestering.recipient))
+        if pestering.notify_recipient_method == 'B':
+            recip_emails.append(pestering.recipient.email)
+            recip_emails.append(
+                    self._build_email_from_phone_number(
+                        pesering.recipient))
+        return recip_emails
 
-    def pestering_attempt_success(self, pestering_attempt):
-        pestering_attempt.success=True
-        pestering_attempt.save()
+    def _build_email_from_phone_number(self, person):
+        """Build email from a person's carrier and phone number"""
+        return person.phone_number + '@' + person.carrier.gateway

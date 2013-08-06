@@ -19,7 +19,10 @@ class SendPester(object):
         self.subject = None
         self.url = None
         self.message = None
+        print 'Opening server at localhost...',
         self._start_smtp_server('localhost')
+        print 'server: ' + str(self.server)
+
 
     def __del__(self):
         self.server.quit()
@@ -43,7 +46,7 @@ class SendPester(object):
         self.subject = (subject if subject else str(datetime.now()))
         self._validate_field('URL', url)
         self.url = url
-
+            
         self._build_message()
         self._send_email()
     

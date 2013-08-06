@@ -1,7 +1,7 @@
 #! /bin/bash
 
 python=/home/paul/.virtualenvs/dj/bin/python
-manager=/home/paul/djprojs/mysite/pester/pestering_manager.py
+manager=/home/paul/djprojs/mysite/pester/run_pestering_manager.py
 
 if ! [ -f $python ]; then
     echo "No python executable at $python"

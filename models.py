@@ -15,12 +15,17 @@ def validate_pnum(pnum):
 
 class API(models.Model):
     """Model detialing the API params"""
-    name = models.CharField(max_length=32)
+    name = models.CharField(max_length=32, unique=True)
     key = models.CharField(max_length=200)
     params = models.TextField(blank=True)
 
     def __unicode__(self):
         return self.name
+
+class APICall(models.Model):
+    """Model to record api calls"""
+    api = models.ForeignKey(API, null=True)
+    call_time = models.DateTimeField(auto_now_add=True)
 
 class Carrier(models.Model):
     """Model connecting cellular SMS providers to email addresses"""
@@ -83,10 +88,12 @@ class Pestering(models.Model):
     pattern = models.ForeignKey(Pattern)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
+    NEITHER = 'N'
     EMAIL = 'E'
     TEXT = 'T'
     BOTH = 'B'
     NOTIFY_METHODS = (
+        (NEITHER, 'None!'),
         (EMAIL, 'By Email'),
         (TEXT, 'By Text'),
         (BOTH, 'By Text and Email'),

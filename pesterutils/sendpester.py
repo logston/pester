@@ -19,9 +19,7 @@ class SendPester(object):
         self.subject = None
         self.url = None
         self.message = None
-        print 'Opening server at localhost...',
         self._start_smtp_server('localhost')
-        print 'server: ' + str(self.server)
 
 
     def __del__(self):

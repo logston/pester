@@ -1,0 +1,11 @@
+- Front face to website
+- - enter your email address and be able make a pester, delete, edit
+
+- offset issue fixed
+
+- more options for patterns, random 3 times a week specifically
+- tests for code
+
+
+== Updated 2013.08.08
+After consideration of these goals and the fact that I wrote this in Python 2.7, I have decided to fix the offset issue and move on to another project.

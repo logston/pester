@@ -22,11 +22,6 @@ class API(models.Model):
     def __unicode__(self):
         return self.name
 
-class APICall(models.Model):
-    """Model to record api calls"""
-    api = models.ForeignKey(API, null=True)
-    call_time = models.DateTimeField(auto_now_add=True)
-
 class Carrier(models.Model):
     """Model connecting cellular SMS providers to email addresses"""
     name = models.CharField(max_length=32)
@@ -125,6 +120,16 @@ class Pestering(models.Model):
                         str(self.search_term),
                         ' | ',
                         str(self.pattern)))
+
+
+class APICall(models.Model):
+    """Model to record api calls"""
+    api = models.ForeignKey(API, null=True)
+    call_time = models.DateTimeField(auto_now_add=True)
+    pestering = models.ForeignKey(Pestering, null=True)
+
+    def __unicode__(self):
+        return str(self.api) + ' | ' + str(self.pestering.search_term)
 
 class ImageData(models.Model):
     """Model describing """

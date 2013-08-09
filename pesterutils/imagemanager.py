@@ -8,13 +8,11 @@ ImageDatas are necessary.
 from django.db.utils import IntegrityError
 import simplejson
 
-from pester.models import API, ImageData, PesteringAttempt
+from pester.models import API, APICall, ImageData, PesteringAttempt
 
 from pester.pesterutils.bingapi import BingAPI
 from pester.pesterutils.googleapi import GoogleAPI
 
-
-# TODO Deal with offset options, find out if google api offers it
 
 class APIException(Exception):
     """Exception class for all API issues"""
@@ -81,16 +79,33 @@ class ImageManager(object):
                 adult_safety_level=self.pestering.adult_safety_level
                 )
 
+    def _get_api_offset(self, api):
+        """return the offset for the api, search_term, options combo"""
+        if api == 'Bing':
+           apic=APICall.objects.filter(
+                    api=api,
+                    pestering.search_term=self.pestering.search_term,
+                    pestering.adult_safety_level=self.pestering.adult_safety_level)
+            self._bing_offset=len(apic)*50
+
+        if self._use_google:
+            apic=APICall.objects.filter(
+                    api=api,
+                    pestering.search_term=self.pestering.search_term,
+                    pestering.adult_safety_level=self.pestering.adult_safety_level)         
+            self._google_offset=len(apic)*10
+                
     def _get_more_images(self):
         """Query API for more images and load them into db"""
         if self._use_bing:
-            bapi = BingAPI(API.objects.get(name='Bing').key)
+            api = API.objects.get(name='Bing')
+            bapi = BingAPI(api.key)
             self._insert_images_into_db(
                     bapi.query(
                         search_terms=self.pestering.search_term,
                         offset=self._bing_offset,
                         adult=self.pestering.adult_safety_level))
-            # not dealing with offset issues right now
+            APICall.objects.create(api=api,pestering=pestering)
             return
         if self._use_google:
             g = API.objects.get(name='Google')
@@ -102,6 +117,7 @@ class ImageManager(object):
                         search_terms=self.pestering.search_term,
                         offset=self._google_offset,
                         adult=self.pestering.adult_safety_level))
+            APICall.objects.create(api=g, pestering=pestering)
             return
         raise NoAPIException('No available APIs to query.') 
 
